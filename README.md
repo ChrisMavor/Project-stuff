@@ -4,9 +4,9 @@ Work in progress
 # PART 1: Code
 ##########################
 
-##########################
-# Transposing a matrix 
-##########################
+      ##########################
+      # Transposing a matrix 
+      ##########################
 def MatrixTranspose(matrix):
   B = [[0 for col in range(len(matrix))] for row in range(len(matrix[0]))] 
   for i in range(len(matrix)):
@@ -14,9 +14,9 @@ def MatrixTranspose(matrix):
       B[j][i]=matrix[i][j]
   return B 
 
-##########################
-# Transposing a matrix 
-##########################
+      ##########################
+      # Scalar Vector Multiplication
+      ##########################
 
 def vecScalar(vec,scalar):
   row = [ ]
@@ -24,9 +24,9 @@ def vecScalar(vec,scalar):
       row.append(scalar*vec[i])
   return row
 
-##########################
-# Dot Product 
-########################## 
+      ##########################
+      # Dot Product 
+      ########################## 
 def dot(vector01,vector02):
   """
   Inputs:
@@ -50,6 +50,15 @@ def dot(vector01,vector02):
       return  "Incorrect sizing. Make sure both inputs are a single list of the same length. Make sure inputs are not integers, matrices(list of lists), or strings."
   else:
     return  "Incorrect sizing. Make sure both inputs are a single list of the same length. Make sure inputs are not integers, matrices(list of lists), or strings."
+      ##########################
+      # Vector Subtraction
+      ########################## 
+def vecSub(vector1,vector2):
+  x=[]
+  if len(vector1)==len(vector2):
+    for i in range(len(vector1)):
+      x.append(vector1[i]-vector2[i])
+    return x
 
 ##########################
 # PART 1: Question 1
@@ -81,28 +90,30 @@ print(A)
 # PART 1: Question 2
 ##########################
 
+def Qmatrix(matrix):
+  V = MatrixTranspose(matrix)
+  X = [[0 for col in range(len(V[0]))] for row in range(len(V))]
 
-def QRFactorization(A):
-  QR=[]
-  Q=[]
-  V=MatrixTranspose(A)
-  print(V)
- 
-  for i in range(len(V)): 
-      rows=[]
-      if i == 0:
-        rows.append(V[i])
-      elif i == 1:
-        dot1= dot(V[i],V[i-1])
-        print(dot1)
-        proj2 = vecScalar(V[i],proj1)
-        rows.append(V[i]-proj2)
-      elif i == 2:
-        proj= (dot(V[i-2],V[i])/dot(V[i-1],V[i-1]))
-        proj1 = dot(V[i-1],V[i])*(dot(V[i-1],V[i-1]))**(-1)
-        proj2 = vecScalar(V[i],proj1)
-        proj3 = vecScalar(V[i],proj)
-        rows.append(V[i]-proj2)
-      print(rows) 
+  for i in range(len(V)):
+    if i == 0:
+      X[i]= V[i]
+    elif i == 1:
+      X[i]= vecSub(V[i],(vecScalar(X[i-1],(dot(V[i],X[i-1])/dot(X[i-1],X[i-1])))))
+    elif i == 2:
+      proj2 = vecScalar(X[i-1],(dot(V[i],X[i-1])/dot(X[i-1],X[i-1])))
+      proj1 = vecScalar(X[i-2],(dot(V[i],X[i-2])/dot(X[i-2],X[i-2])))
+      projs=vecSub(proj2,proj1)
+      X[i] = vecSub(V[i],projs)
+    elif i == 3:
+      proj3 = vecScalar(X[i-1],(dot(V[i],X[i-1])/dot(X[i-1],X[i-1])))
+      proj2 = vecScalar(X[i-2],(dot(V[i],X[i-2])/dot(X[i-2],X[i-2])))
+      proj1 = vecScalar(X[i-3],(dot(V[i],X[i-3])/dot(X[i-3],X[i-3])))
+      projs2=vecSub(proj2,proj1)
+      projs= vecSub(proj3,projs2)
+      X[i] = vecSub(V[i],projs)
+  Q = MatrixTranspose(X) 
+  return Q
+  
+matrix =[[1,2,1,1],[2,2,3,2],[3,3,3,4],[4,4,4,5]] 
 
-print(QRFactorization(A))
+print(Qmatrix(matrix))
