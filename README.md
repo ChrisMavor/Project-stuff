@@ -4,9 +4,9 @@ Work in progress
 # PART 1: Code
 ##########################
 
-      ##########################
-      # Transposing a matrix 
-      ##########################
+##########################
+# Transposing a matrix 
+##########################
 def MatrixTranspose(matrix):
   B = [[0 for col in range(len(matrix))] for row in range(len(matrix[0]))] 
   for i in range(len(matrix)):
@@ -14,9 +14,9 @@ def MatrixTranspose(matrix):
       B[j][i]=matrix[i][j]
   return B 
 
-      ##########################
-      # Scalar Vector Multiplication
-      ##########################
+##########################
+# Scalar Vector Multiplication
+##########################
 
 def vecScalar(vec,scalar):
   row = [ ]
@@ -24,9 +24,9 @@ def vecScalar(vec,scalar):
       row.append(scalar*vec[i])
   return row
 
-      ##########################
-      # Dot Product 
-      ########################## 
+##########################
+# Dot Product 
+########################## 
 def dot(vector01,vector02):
   """
   Inputs:
@@ -39,26 +39,36 @@ def dot(vector01,vector02):
   If proper inputs are given, the end result will return a integer called 'row'.
   """
   if type(vector01)==list and type(vector02)==list:
-    if len(vector01)!=len(vector02):
-      return "Incorrect sizing. Make sure both inputs are a single list of the same length. Make sure inputs are not integers, matrices(list of lists), or strings."
-    elif type(vector01[0]) == type(vector02[0]):
+    if len(vector01)==len(vector02):
       dot=0 
       for i in range(len(vector01)):
         dot+=vector01[i]*vector02[i]
-      return 'vector01 * vector02 =' , dot
+      return dot
     else:
       return  "Incorrect sizing. Make sure both inputs are a single list of the same length. Make sure inputs are not integers, matrices(list of lists), or strings."
   else:
     return  "Incorrect sizing. Make sure both inputs are a single list of the same length. Make sure inputs are not integers, matrices(list of lists), or strings."
-      ##########################
-      # Vector Subtraction
-      ########################## 
+##########################
+# Vector Subtraction
+########################## 
 def vecSub(vector1,vector2):
   x=[]
   if len(vector1)==len(vector2):
     for i in range(len(vector1)):
       x.append(vector1[i]-vector2[i])
     return x
+##########################
+# Normalizing Matrix 
+########################## 
+def normilzeMatrix(matrix):
+  normalize=[]
+  for i in range(len(matrix)):
+    length=0
+    for j in range(len(matrix[0])):
+      length+=matrix[i][j]**2
+    norm=length**(1/2)
+    normalize.append(vecScalar(matrix[i],(1/norm)))
+  return normalize
 
 ##########################
 # PART 1: Question 1
@@ -83,8 +93,11 @@ def vandermondeProject(x,y):
 datay=[1.102,1.099, 1.017, 1.111, 1.117, 1.152, 1.265, 1.380, 1.575, 1.857]
 datax=[.55, .60, .65,.70,.75,.80,.85,.90,.95,1.00]
 A = vandermondeProject(datax,datay)
+print('-----------------------')
+print('Question #1')
+print('Vandermonde Matrix A =')
 print(A)
-#print(vandermondeProject(datax,datay))
+print(vandermondeProject(datax,datay))
 
 ##########################
 # PART 1: Question 2
@@ -111,9 +124,12 @@ def Qmatrix(matrix):
       projs2=vecSub(proj2,proj1)
       projs= vecSub(proj3,projs2)
       X[i] = vecSub(V[i],projs)
-  Q = MatrixTranspose(X) 
+  Q = normilzeMatrix(X)
+  Q = MatrixTranspose(Q) 
   return Q
   
-matrix =[[1,2,1,1],[2,2,3,2],[3,3,3,4],[4,4,4,5]] 
-
+matrix = A 
+print('-----------------------')
+print('Question #2')
+print('Orthanormal Matrix Q=')
 print(Qmatrix(matrix))
