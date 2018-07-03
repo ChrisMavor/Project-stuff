@@ -58,6 +58,25 @@ def vecSub(vector1,vector2):
       x.append(vector1[i]-vector2[i])
     return x
 ##########################
+# Matrix Matrix Multiplication
+##########################
+def matmatmult(A,B):
+  if type(A)==list and type(B)==list:
+    if type(A[0])==list and type(B[0])==list:
+      if len(A[0])==len(B):
+        X = [[0 for col in range(len(B[0]))] for row in range(len(A))]
+        B = MatrixTranspose(B)
+        for i in range(len(A)):
+          for j in range(len(B)):
+            X[i][j]= dot(A[i],B[j])
+        return X
+      else:
+        return None
+    else:
+      return None
+  else: 
+    return None
+##########################
 # Normalizing Matrix 
 ########################## 
 def normilzeMatrix(matrix):
@@ -97,7 +116,7 @@ print('-----------------------')
 print('Question #1')
 print('Vandermonde Matrix A =')
 print(A)
-print(vandermondeProject(datax,datay))
+#print(vandermondeProject(datax,datay))
 
 ##########################
 # PART 1: Question 2
@@ -109,27 +128,37 @@ def Qmatrix(matrix):
 
   for i in range(len(V)):
     if i == 0:
-      X[i]= V[i]
+      X[i] = V[i]
     elif i == 1:
       X[i]= vecSub(V[i],(vecScalar(X[i-1],(dot(V[i],X[i-1])/dot(X[i-1],X[i-1])))))
     elif i == 2:
       proj2 = vecScalar(X[i-1],(dot(V[i],X[i-1])/dot(X[i-1],X[i-1])))
       proj1 = vecScalar(X[i-2],(dot(V[i],X[i-2])/dot(X[i-2],X[i-2])))
-      projs=vecSub(proj2,proj1)
+      projs = vecSub(proj2,proj1)
       X[i] = vecSub(V[i],projs)
     elif i == 3:
       proj3 = vecScalar(X[i-1],(dot(V[i],X[i-1])/dot(X[i-1],X[i-1])))
       proj2 = vecScalar(X[i-2],(dot(V[i],X[i-2])/dot(X[i-2],X[i-2])))
       proj1 = vecScalar(X[i-3],(dot(V[i],X[i-3])/dot(X[i-3],X[i-3])))
-      projs2=vecSub(proj2,proj1)
-      projs= vecSub(proj3,projs2)
+      projs2 = vecSub(proj2,proj1)
+      projs = vecSub(proj3,projs2)
       X[i] = vecSub(V[i],projs)
   Q = normilzeMatrix(X)
   Q = MatrixTranspose(Q) 
   return Q
   
 matrix = A 
+Q = Qmatrix(matrix)
 print('-----------------------')
 print('Question #2')
 print('Orthanormal Matrix Q=')
-print(Qmatrix(matrix))
+print(Q)
+
+def Rmatrix(Q,A):
+  Qt = MatrixTranspose(Q)
+  R = matmatmult(Qt,A)
+  return R
+
+R=Rmatrix(Q,A) 
+print('Upper Triangular Matrix R=')
+print(R)
